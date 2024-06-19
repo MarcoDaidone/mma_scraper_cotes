@@ -1,3 +1,4 @@
+const cron = require('node-cron');
 const { chromium } = require('playwright');
 const axios = require('axios');
 const { HttpsProxyAgent } = require('https-proxy-agent');
@@ -10,7 +11,7 @@ const testUrl = 'https://ip.smartproxy.com/json'; // URL de test pour vérifier 
 const url = 'https://www.unibet.fr/sport/mma';
 const apiUrl = 'https://mma-api-fr-1304d5fba742.herokuapp.com/update-cotes';
 
-(async () => {
+async function scrape() {
      const proxyAgent = new HttpsProxyAgent(proxyUrl);
 
      // Vérifier l'accessibilité de la page de test via le proxy
@@ -147,10 +148,14 @@ const apiUrl = 'https://mma-api-fr-1304d5fba742.herokuapp.com/update-cotes';
 
           await browser.close();
      }
-})()
-     .catch((error) => {
-          console.error("Erreur lors de l'exécution du script:", error);
-     })
-     .finally(() => {
-          process.exit(0); // Ajoute cette ligne pour terminer le script
-     });
+}
+
+// Planification cron pour exécuter le scraping toutes les heures
+cron.schedule('0 * * * *', () => {
+     console.log('Lancement de la tâche cron de scraping à', new Date());
+     scrape();
+});
+
+console.log(
+     'Tâche cron configurée pour exécuter le scraping toutes les heures.'
+);
