@@ -46,10 +46,6 @@ const apiUrl = 'https://mma-api-fr-1304d5fba742.herokuapp.com/update-cotes';
           await page.goto(url, { waitUntil: 'networkidle' });
           console.log('Page chargée avec succès');
 
-          // Afficher le contenu HTML de la page dans la console
-          const pageContent = await page.content();
-          console.log('Contenu HTML de la page après chargement:', pageContent);
-
           // Attendre que l'élément #container soit chargé
           await page.waitForSelector('#container', { timeout: 90000 });
           console.log('Élément #container trouvé');
@@ -151,6 +147,10 @@ const apiUrl = 'https://mma-api-fr-1304d5fba742.herokuapp.com/update-cotes';
 
           await browser.close();
      }
-})().catch((error) => {
-     console.error("Erreur lors de l'exécution du script:", error);
-});
+})()
+     .catch((error) => {
+          console.error("Erreur lors de l'exécution du script:", error);
+     })
+     .finally(() => {
+          process.exit(0); // Ajoute cette ligne pour terminer le script
+     });
